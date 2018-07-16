@@ -1,0 +1,54 @@
+###### Cross-flips EXAMPLE 
+###### Lets consider the following balanced triangulation of the 3-sphere on 12 vertices (as in one of Hailun's papers):
+
+S3_12_44=[[1,3,5,10],[3,4,5,6],[0,6,7,9],[3,5,6,10],[1,3,7,10],[1,7,10,11],[0,1,7,11],[2,4,6,9],[0,1,2,9],[0,2,6,9],[3,4,6,7],[1,4,7,9],[1,5,10,11],[4,6,7,9],[6,7,10,11],[1,2,4,8],[3,6,7,10],[0,1,7,9],[1,3,4,5],[0,1,2,8],[0,5,6,11],[5,6,10,11],[0,5,6,8],[2,4,6,8],[0,2,6,8],[1,3,4,7],[1,4,5,8],[1,2,4,9],[4,5,6,8],[0,6,7,11],[0,1,5,11],[0,1,5,8]]
+S=SimplicialComplex(S3_12_44)
+
+###### load the file
+
+load("cross_flips.sage")
+
+###### Produce the cross flips
+
+cf = cross_flips(4)
+
+###### cf is a list of four lists, each containing 7 ( = 2^(d-1)-1) elements. 
+###### cf[0][i] and cf[1][i] are complementary in the cross-polytope and they are ordered so that replacing cf[0][i] with cf[1][i] always increases f0.
+###### cf[2][i] and cf[3][i] contain respectively the h-vector of cf[0][i] and cf[1][i].
+
+###### Check ALL the applicable flips
+
+app = applicable_list(cf,S)
+
+###### app is a list of 2 lists, each containing 7 lists. 
+###### app[i][j] contains ALL the induced subcomplexes of S isomorphic to cf[i][j]. 
+###### Those are precisely the guys that can be flipped.
+###### It takes some seconds: needs some speed up.
+
+###### If you want to know how many different flips that increase f0 are applicable on S then type
+
+[len(app[0][i]) for i in range(7)]
+
+###### For those decreasing f0 type
+
+[len(app[1][i]) for i in range(7)]
+
+###### You should see in the example that there are only two type of moves decreasing f0 that are now applicable on S.
+
+###### By looking at the h-vectors you can see that there are 3 non isomorphic flips adding 1 vertex, namely those in cf[0][j], for j=2,4,5.
+###### Unfortunally app[0][4] is empty. Lets produce 2 non isomorphic balanced 3-spheres on 13 vertices by applying the flips cf[0][2] and cf[0][5]. 
+###### The subcomplex will be chosen randomly (but you can of course pick a specific one).  
+
+r2 = random.choice(range(len(app[0][2])))
+new2 = mainVF2_one_move(0,2,r2,cr4,S,app)
+
+r5 = random.choice(range(len(app[0][5])))
+new5 = mainVF2_one_move(0,5,r5,cr4,S,app)
+
+###### Note that also applying two moves of the same type you will (very likely) end up with two non-isomprhic objects, since the choice of the subcomplex you flip matters.
+
+###### Assume now you are happy with new5 and you want to use it as your starting point. Then you can update the list of all applicable moves as follows.
+
+update =  update_moves(cf,app[0][5][r5],app,S,cr4)
+
+###### Note that the flip cf[0][4] is now applicable on new5. Indeed update[0][4] is non-empty.
