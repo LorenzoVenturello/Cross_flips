@@ -472,11 +472,11 @@ def update_moves(cflips,sub,app,simp_comp,cross_poly,only_down=False):
 	new_app=[[],[]]
 	facets_to_check=list(set([i for i in G.vertices() for j in vrs if G.distance(j,i)<=4]))
 	H=G.subgraph(facets_to_check)
-	if only_down==False:
+	if not only_down:
 		for i0 in range(len(app[0])):
 			a=[]
 			for j0 in range(len(app[0][i0])):
-				if app[0][i0][j0]&sub==set() and is_induced(SimplicialComplex(app[0][i0][j0]),new_complex)==True:
+				if len(app[0][i0][j0]&sub)==0 and is_induced(SimplicialComplex(app[0][i0][j0]),new_complex):
 					a.append(app[0][i0][j0])
 			new_isa=is_applicable_graphs_VF2NOSTOP_for_update(H,cflips[0][i0],new_complex)
 			for i in new_isa:
@@ -486,7 +486,7 @@ def update_moves(cflips,sub,app,simp_comp,cross_poly,only_down=False):
 	for i1 in range(len(app[1])):
 		b=[]
 		for j1 in range(len(app[1][i1])):
-			if app[1][i1][j1]&sub==set() and is_induced(SimplicialComplex(app[1][i1][j1]),new_complex)==True:
+			if len(app[1][i1][j1]&sub)==0 and is_induced(SimplicialComplex(app[1][i1][j1]),new_complex):
 				b.append(app[1][i1][j1])
 		new_isa=is_applicable_graphs_VF2NOSTOP_for_update(H,cflips[1][i1],new_complex)
 		for i in new_isa:
@@ -494,13 +494,4 @@ def update_moves(cflips,sub,app,simp_comp,cross_poly,only_down=False):
 				b.append(i)		
 		new_app[1].append(remove_redundancies_list(b))	
 	return new_app	
-
-
-
-
-
-
-	
-	
-
 
