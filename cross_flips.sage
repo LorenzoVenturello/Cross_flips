@@ -363,19 +363,13 @@ def applicable_list(cflips,simp_comp,stop_first=False):
 ###### INPUT: sub = a subcomplex of simp_comp, simp_comp = the source simplicial complex.
 ###### Output: true if sub is an induced subcomplex of simp_comp
 def is_induced(sub,simp_comp):
-	V1=sub.vertices()
-	V2=simp_comp.vertices()
-	for k in range(2,simp_comp.dimension()+2):
-		p=powerset_n(V1,k)
-		##p is an iterator
-		simp_comp_n_faces = simp_comp.n_faces(k-1)
-		sub_n_faces = sub.n_faces(k-1)
-		for i in p:
-			if (Simplex(i) in simp_comp_n_faces):
-				if (Simplex(i) not in sub_n_faces):
-					return False
+	V = sub.vertices()
+	for i in range(1,simp_comp.dimension()+1):
+		for face in simp_comp.n_faces(i):
+			if set(face) <= V and Simplex(face) not in sub:
+				return False
 	return True
-
+		
 #################################################################################
 #################################################################################
 #################################################################################
